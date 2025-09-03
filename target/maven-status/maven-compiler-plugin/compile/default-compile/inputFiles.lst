@@ -1,8 +1,0 @@
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/Main.java
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/dao/UserDao.java
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/dao/UserDaoHibernateImpl.java
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/dao/UserDaoJDBCImpl.java
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/model/User.java
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/service/UserService.java
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/service/UserServiceImpl.java
-/Users/user/IdeaProjects/PP_1_1_4_JDBC_Hibernate/src/main/java/jm/task/core/jdbc/util/Util.java
