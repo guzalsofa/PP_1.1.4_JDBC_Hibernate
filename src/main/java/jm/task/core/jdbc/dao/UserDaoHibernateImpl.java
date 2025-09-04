@@ -1,1 +1,156 @@
-package jm.task.core.jdbc.dao;import jm.task.core.jdbc.model.User;import jm.task.core.jdbc.util.Util;import org.hibernate.SessionFactory;import org.hibernate.Transaction;import org.hibernate.Session;import java.util.ArrayList;import java.util.List;public class UserDaoHibernateImpl implements UserDao {    public UserDaoHibernateImpl() {    }    private static final String CREATE_SQL = """            CREATE TABLE IF NOT EXISTS users (              id BIGINT PRIMARY KEY AUTO_INCREMENT,              name VARCHAR(50) NOT NULL,              lastName VARCHAR(50) NOT NULL,              age TINYINT UNSIGNED NOT NULL            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4            """;    private static final String DROP_SQL = "DROP TABLE IF EXISTS users";    private static final String TRUNCATE_SQL = "TRUNCATE TABLE users";    @Override    public void createUsersTable() {        Session session = null;        Transaction transaction = null;        try {            SessionFactory sf = Util.getSessionFactory();            session = sf.openSession();            transaction = session.beginTransaction();            session.createNativeQuery(CREATE_SQL).executeUpdate();            transaction.commit();        } catch (Exception e) {            if (transaction != null) {                transaction.rollback();            }            e.printStackTrace();        } finally {            if (session != null) {                session.close();            }        }    }    @Override    public void dropUsersTable() {        Session session = null;        Transaction transaction = null;        try {            SessionFactory sf = Util.getSessionFactory();            session = sf.openSession();            transaction = session.beginTransaction();            session.createNativeQuery(DROP_SQL).executeUpdate();            transaction.commit();        } catch (Exception e) {            if (transaction != null) {                transaction.rollback();            }        } finally {            if (session != null) {                session.close();            }        }    }    @Override    public void saveUser(String name, String lastName, byte age) {        Session session = null;        Transaction transaction = null;        try {            SessionFactory sf = Util.getSessionFactory();            session = sf.openSession();            transaction = session.beginTransaction();            User user = new User();            user.setName(name);            user.setLastName(lastName);            user.setAge(age);            session.persist(user);            transaction.commit();        }catch (Exception e){            if (transaction != null) {                transaction.rollback();            }        }finally {            if (session != null) {                session.close();            }        }    }    @Override    public void removeUserById(long id) {        Session session = null;        Transaction transaction = null;        try {            SessionFactory sf = Util.getSessionFactory();            session = sf.openSession();            transaction = session.beginTransaction();            User user = session.get(User.class, id);            if (user != null) {                session.remove(user);            }            transaction.commit();        }catch (Exception e){            if (transaction != null) {                transaction.rollback();            }        }finally {            if (session != null) {                session.close();            }        }    }    @Override    public List<User> getAllUsers() {        Session session = null;        try {            SessionFactory sf = Util.getSessionFactory();            session = sf.openSession();            return session.createQuery("from User", User.class).getResultList();        } catch (Exception e) {                System.err.println("Failed to getAllUsers: " + e.getMessage());                return new ArrayList<>();            }finally{                if (session != null) {                    session.close();                }            }        }    @Override    public void cleanUsersTable() {        Session session = null;        Transaction transaction = null;        try {            SessionFactory sf = Util.getSessionFactory();            session = sf.openSession();            transaction = session.beginTransaction();            session.createNativeQuery("TRUNCATE TABLE users").executeUpdate();            transaction.commit();        }catch (Exception e){            if (transaction != null) {                transaction.rollback();            }        }finally {            if (session != null) {                session.close();            }        }    }}
+package jm.task.core.jdbc.dao;
+
+import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.util.Util;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.Session;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserDaoHibernateImpl implements UserDao {
+    public UserDaoHibernateImpl() {
+    }
+
+    private static final String CREATE_SQL = """
+            CREATE TABLE IF NOT EXISTS users (
+              id BIGINT PRIMARY KEY AUTO_INCREMENT,
+              name VARCHAR(50) NOT NULL,
+              lastName VARCHAR(50) NOT NULL,
+              age TINYINT UNSIGNED NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+            """;
+    private static final String DROP_SQL = "DROP TABLE IF EXISTS users";
+    private static final String TRUNCATE_SQL = "TRUNCATE TABLE users";
+
+    @Override
+    public void createUsersTable() {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            SessionFactory sf = Util.getSessionFactory();
+            session = sf.openSession();
+            transaction = session.beginTransaction();
+            session.createNativeQuery(CREATE_SQL).executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    @Override
+    public void dropUsersTable() {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            SessionFactory sf = Util.getSessionFactory();
+            session = sf.openSession();
+            transaction = session.beginTransaction();
+            session.createNativeQuery(DROP_SQL).executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    @Override
+    public void saveUser(String name, String lastName, byte age) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            SessionFactory sf = Util.getSessionFactory();
+            session = sf.openSession();
+            transaction = session.beginTransaction();
+            User user = new User();
+            user.setName(name);
+            user.setLastName(lastName);
+            user.setAge(age);
+            session.persist(user);
+            transaction.commit();
+        }catch (Exception e){
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    @Override
+    public void removeUserById(long id) {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            SessionFactory sf = Util.getSessionFactory();
+            session = sf.openSession();
+            transaction = session.beginTransaction();
+            User user = session.get(User.class, id);
+            if (user != null) {
+                session.remove(user);
+            }
+            transaction.commit();
+        }catch (Exception e){
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        Session session = null;
+        try {
+            SessionFactory sf = Util.getSessionFactory();
+            session = sf.openSession();
+            return session.createQuery("from User", User.class).getResultList();
+        } catch (Exception e) {
+                System.err.println("Failed to getAllUsers: " + e.getMessage());
+                return new ArrayList<>();
+            }finally{
+                if (session != null) {
+                    session.close();
+                }
+            }
+        }
+
+    @Override
+    public void cleanUsersTable() {
+        Session session = null;
+        Transaction transaction = null;
+        try {
+            SessionFactory sf = Util.getSessionFactory();
+            session = sf.openSession();
+            transaction = session.beginTransaction();
+            session.createNativeQuery(TRUNCATE_SQL).executeUpdate();
+            transaction.commit();
+        }catch (Exception e){
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+}
