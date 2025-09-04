@@ -2,7 +2,6 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.Session;
 
@@ -26,11 +25,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Session session = null;
         Transaction transaction = null;
-        try {
-            SessionFactory sf = Util.getSessionFactory();
-            session = sf.openSession();
+        try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.createNativeQuery(CREATE_SQL).executeUpdate();
             transaction.commit();
@@ -39,20 +35,13 @@ public class UserDaoHibernateImpl implements UserDao {
                 transaction.rollback();
             }
             e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
     @Override
     public void dropUsersTable() {
-        Session session = null;
         Transaction transaction = null;
-        try {
-            SessionFactory sf = Util.getSessionFactory();
-            session = sf.openSession();
+        try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.createNativeQuery(DROP_SQL).executeUpdate();
             transaction.commit();
@@ -60,20 +49,13 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Session session = null;
         Transaction transaction = null;
-        try {
-            SessionFactory sf = Util.getSessionFactory();
-            session = sf.openSession();
+        try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             User user = new User();
             user.setName(name);
@@ -81,75 +63,50 @@ public class UserDaoHibernateImpl implements UserDao {
             user.setAge(age);
             session.persist(user);
             transaction.commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
-            }
-        }finally {
-            if (session != null) {
-                session.close();
             }
         }
     }
 
     @Override
     public void removeUserById(long id) {
-        Session session = null;
         Transaction transaction = null;
-        try {
-            SessionFactory sf = Util.getSessionFactory();
-            session = sf.openSession();
+        try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             User user = session.get(User.class, id);
             if (user != null) {
                 session.remove(user);
             }
             transaction.commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
-            }
-        }finally {
-            if (session != null) {
-                session.close();
             }
         }
     }
 
     @Override
     public List<User> getAllUsers() {
-        Session session = null;
-        try {
-            SessionFactory sf = Util.getSessionFactory();
-            session = sf.openSession();
+        try (Session session = Util.getSessionFactory().openSession()) {
             return session.createQuery("from User", User.class).getResultList();
         } catch (Exception e) {
-                System.err.println("Failed to getAllUsers: " + e.getMessage());
-                return new ArrayList<>();
-            }finally{
-                if (session != null) {
-                    session.close();
-                }
-            }
+            System.err.println("Failed to getAllUsers: " + e.getMessage());
+            return new ArrayList<>();
         }
+    }
 
     @Override
     public void cleanUsersTable() {
-        Session session = null;
         Transaction transaction = null;
-        try {
-            SessionFactory sf = Util.getSessionFactory();
-            session = sf.openSession();
+        try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.createNativeQuery(TRUNCATE_SQL).executeUpdate();
             transaction.commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
-            }
-        }finally {
-            if (session != null) {
-                session.close();
             }
         }
     }
